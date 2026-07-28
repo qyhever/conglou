@@ -27,7 +27,7 @@ pnpm build
 
 echo "📤 开始上传前端构建产物..."
 if [ -n "$DEPLOY_SSH_PORT" ]; then
-    rsync -avz --delete -e "ssh -p $DEPLOY_SSH_PORT" dist/ "${DEPLOY_TARGET}:/var/www/html/conglou/"
+    rsync -avz --delete -e "ssh -p $DEPLOY_SSH_PORT" dist/ "${DEPLOY_TARGET}:/usr/share/nginx/html/conglou/"
 else
     rsync -avz --delete dist/ "${DEPLOY_TARGET}:/usr/share/nginx/html/conglou/"
 fi
