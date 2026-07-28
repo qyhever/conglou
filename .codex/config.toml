@@ -1,0 +1,8 @@
+# sandbox_mode = "workspace-write"
+
+[features]
+sandbox = false  # 完全关闭沙箱，codex 和本机权限一致
+
+[mcp_servers.chrome-devtools]
+command = "npx"
+args = ["-y", "chrome-devtools-mcp@latest", "--isolated", "--no-usage-statistics"]

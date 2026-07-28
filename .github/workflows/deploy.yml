@@ -47,19 +47,29 @@ jobs:
         shell: bash
         env:
           SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_PORT: ${{ secrets.SERVER_PORT || '22' }}
           SERVER_SSH_RSA: ${{ secrets.SERVER_SSH_RSA }}
         run: |
           : "${SERVER_HOST:?SERVER_HOST secret is required}"
+          : "${SERVER_PORT:?SERVER_PORT secret is required}"
           : "${SERVER_SSH_RSA:?SERVER_SSH_RSA secret is required}"
           install -m 700 -d ~/.ssh
           printf '%s\n' "$SERVER_SSH_RSA" | tr -d '\r' > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H "$SERVER_HOST" >> ~/.ssh/known_hosts
+          if ! ssh-keygen -y -f ~/.ssh/id_rsa > /dev/null; then
+            echo "::error::SERVER_SSH_RSA is not a valid SSH private key"
+            exit 1
+          fi
+          if ! ssh-keyscan -T 10 -p "$SERVER_PORT" -H "$SERVER_HOST" >> ~/.ssh/known_hosts; then
+            echo "::error::Unable to fetch SSH host key from SERVER_HOST:SERVER_PORT"
+            exit 1
+          fi
           chmod 600 ~/.ssh/known_hosts
 
       - name: Deploy frontend
         shell: bash
         env:
           SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_PORT: ${{ secrets.SERVER_PORT || '22' }}
           SERVER_USER: ${{ secrets.SERVER_USER }}
         run: bash ./scripts/deploy.sh
