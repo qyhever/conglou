@@ -1,0 +1,158 @@
+---
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+}
+
+const { headings } = Astro.props;
+
+// AstroPaper 的文章标题来自 frontmatter，正文一般从 h2 开始
+const tocHeadings = headings.filter(
+  heading => heading.depth >= 2 && heading.depth <= 4
+);
+---
+
+{
+  tocHeadings.length > 0 && (
+    <nav
+      class="post-toc"
+      aria-label="文章目录"
+      data-pagefind-ignore="all"
+    >
+      <h2 class="post-toc-title">文章目录</h2>
+
+      <ol class="post-toc-list">
+        {
+          tocHeadings.map(heading => (
+            <li
+              class:list={[
+                "post-toc-item",
+                heading.depth === 3 && "post-toc-level-3",
+                heading.depth === 4 && "post-toc-level-4",
+              ]}
+            >
+              <a href={`#${heading.slug}`} data-toc-link={heading.slug}>
+                {heading.text}
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </nav>
+  )
+}
+
+<style>
+  .post-toc {
+    position: sticky;
+    top: 6rem;
+    max-height: calc(100vh - 8rem);
+    overflow-y: auto;
+    padding-left: 1rem;
+    border-left: 1px solid var(--color-border);
+    scrollbar-width: thin;
+  }
+
+  .post-toc-title {
+    margin: 0 0 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--color-foreground);
+  }
+
+  .post-toc-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .post-toc-item {
+    margin: 0.25rem 0;
+  }
+
+  .post-toc-item a {
+    display: block;
+    padding: 0.2rem 0;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--color-muted-foreground);
+    text-decoration: none;
+    transition:
+      color 150ms ease,
+      transform 150ms ease;
+  }
+
+  .post-toc-item a:hover,
+  .post-toc-item a.active {
+    color: var(--color-accent);
+  }
+
+  .post-toc-item a.active {
+    font-weight: 600;
+    transform: translateX(0.2rem);
+  }
+
+  .post-toc-level-3 {
+    padding-left: 0.75rem;
+  }
+
+  .post-toc-level-4 {
+    padding-left: 1.5rem;
+  }
+</style>
+
+<script>
+  const tocLinks = Array.from(
+    document.querySelectorAll<HTMLAnchorElement>("[data-toc-link]")
+  );
+
+  const headings = tocLinks
+    .map(link => {
+      const id = link.dataset.tocLink;
+      return id ? document.getElementById(id) : null;
+    })
+    .filter((heading): heading is HTMLElement => heading !== null);
+
+  if (headings.length > 0) {
+    const setActive = (id: string) => {
+      tocLinks.forEach(link => {
+        const isActive = link.dataset.tocLink === id;
+        link.classList.toggle("active", isActive);
+
+        if (isActive) {
+          link.setAttribute("aria-current", "location");
+        } else {
+          link.removeAttribute("aria-current");
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(
+      entries => {
+        const visibleEntries = entries
+          .filter(entry => entry.isIntersecting)
+          .sort(
+            (a, b) =>
+              a.boundingClientRect.top - b.boundingClientRect.top
+          );
+
+        const firstVisible = visibleEntries[0];
+
+        if (firstVisible) {
+          setActive(firstVisible.target.id);
+        }
+      },
+      {
+        rootMargin: "-15% 0px -70% 0px",
+        threshold: 0,
+      }
+    );
+
+    headings.forEach(heading => observer.observe(heading));
+  }
+</script>

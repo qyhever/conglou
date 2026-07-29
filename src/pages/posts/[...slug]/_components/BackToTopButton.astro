@@ -61,7 +61,7 @@ const t = useTranslations(Astro.currentLocale);
         `conic-gradient(var(--accent), var(--accent) ${scrollPercent}%, transparent ${scrollPercent}%)`
       );
 
-      const isVisible = scrollTop / scrollTotal > 0.3;
+      const isVisible = scrollTop > 1000;
 
       if (isVisible !== lastVisible) {
         btnContainer.classList.toggle("opacity-100", isVisible);

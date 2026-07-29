@@ -15,6 +15,7 @@ import BackButton from "./_components/BackButton.astro";
 import BackToTopButton from "./_components/BackToTopButton.astro";
 import AdjacentPostNav from "./_components/AdjacentPostNav.astro";
 import config from "@/config";
+import PostToc from "@/components/PostToc.astro";
 
 export async function getStaticPaths() {
   const posts = await getCollection("posts");
@@ -71,7 +72,7 @@ const {
   hideEditPost,
 } = post.data;
 
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 
 let ogImageUrl: string | undefined;
 
@@ -106,58 +107,66 @@ const ogImage = ogImageUrl
 
   <BackButton />
 
-  <main
-    id="main-content"
-    class:list={["app-layout", { "mt-8": !config.features.showBackButton }]}
-    data-pagefind-body
-  >
-    <h1
-      style={{ viewTransitionName: toTransitionName(title) }}
-      class="text-accent inline-block text-2xl font-bold sm:text-3xl"
+  <main class="post-page-layout">
+    <div
+      id="main-content"
+      class:list={[
+        "app-layout post-main",
+        { "mt-8": !config.features.showBackButton },
+      ]}
+      data-pagefind-body
     >
-      {title}
-    </h1>
+      <h1
+        style={{ viewTransitionName: toTransitionName(title) }}
+        class="text-accent inline-block text-2xl font-bold sm:text-3xl"
+      >
+        {title}
+      </h1>
 
-    <div class="my-2 flex items-center gap-2">
-      <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
-      <span
-        aria-hidden="true"
+      <div class="my-2 flex items-center gap-2">
+        <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
+        <span
+          aria-hidden="true"
+          class:list={[
+            "text-muted-foreground max-sm:hidden",
+            { hidden: !config.features.editPost?.enabled || hideEditPost },
+          ]}
+        >
+          |
+        </span>
+        <EditPost {hideEditPost} {post} class="max-sm:hidden" />
+      </div>
+
+      <article
+        id="article"
         class:list={[
-          "text-muted-foreground max-sm:hidden",
-          { hidden: !config.features.editPost?.enabled || hideEditPost },
+          "mt-8 w-full",
+          "app-prose max-w-app",
+          "prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)",
         ]}
       >
-        |
-      </span>
-      <EditPost {hideEditPost} {post} class="max-sm:hidden" />
+        <Content />
+      </article>
+
+      <hr class="my-8 border-dashed" />
+
+      <EditPost class="sm:hidden" {hideEditPost} {post} />
+
+      <BackToTopButton />
+
+      <ul class="mt-4 mb-8 flex flex-wrap gap-4 sm:my-8">
+        {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />)}
+      </ul>
+
+      <ShareLinks />
+
+      <hr class="my-8 border-dashed" />
+
+      <AdjacentPostNav {prevPost} {nextPost} />
     </div>
-
-    <article
-      id="article"
-      class:list={[
-        "mt-8 w-full",
-        "app-prose max-w-app",
-        "prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)",
-      ]}
-    >
-      <Content />
-    </article>
-
-    <hr class="my-8 border-dashed" />
-
-    <EditPost class="sm:hidden" {hideEditPost} {post} />
-
-    <BackToTopButton />
-
-    <ul class="mt-4 mb-8 flex flex-wrap gap-4 sm:my-8">
-      {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />)}
-    </ul>
-
-    <ShareLinks />
-
-    <hr class="my-8 border-dashed" />
-
-    <AdjacentPostNav {prevPost} {nextPost} />
+    <aside class="post-toc-sidebar">
+      <PostToc headings={headings} />
+    </aside>
   </main>
   <Footer />
 </PostLayout>
@@ -197,9 +206,13 @@ const ogImage = ogImageUrl
 
   function addHeadingLinks() {
     const headings = Array.from(
-      document.querySelectorAll("h2, h3, h4, h5, h6")
+      document.querySelectorAll(
+        "#article h2[id], #article h3[id], #article h4[id], #article h5[id], #article h6[id]"
+      )
     );
     for (const heading of headings) {
+      if (heading.querySelector(":scope > .heading-link")) continue;
+
       heading.classList.add("group");
       const link = document.createElement("a");
       link.className =
@@ -530,3 +543,46 @@ const ogImage = ogImageUrl
     window.scrollTo({ left: 0, top: 0, behavior: "instant" })
   );
 </script>
+
+<style>
+  .post-page-layout {
+    width: min(100% - 2rem, 78rem);
+    margin-inline: auto;
+  }
+
+  .post-main {
+    min-width: 0;
+    width: 100%;
+    max-width: 48rem;
+    margin-inline: auto;
+  }
+
+  .post-toc-sidebar {
+    display: none;
+  }
+
+  @media (min-width: 1280px) {
+    .post-page-layout {
+      display: grid;
+      grid-template-columns:
+        minmax(0, 1fr)
+        minmax(0, 48rem)
+        15rem;
+      align-items: start;
+    }
+
+    .post-main {
+      grid-column: 2;
+      margin-inline: 0;
+    }
+
+    .post-toc-sidebar {
+      display: block;
+      grid-column: 3;
+      min-width: 0;
+      position: sticky;
+      top: 6rem;
+      align-self: start;
+    }
+  }
+</style>
