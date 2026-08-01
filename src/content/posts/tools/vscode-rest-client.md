@@ -6,7 +6,7 @@ tags:
   - VSCode
   - REST
   - API
-  - 工具
+  - Tools
 description: "VSCode 的 REST Client 插件允许我们直接在 `.http` 或 `.rest` 文件中编写并发送 HTTP 请求。请求是普通文本，可以和代码一起维护、进行 Git 版本管理，也能通过变量和响应引用串联登录、鉴权等操作。"
 ---
 

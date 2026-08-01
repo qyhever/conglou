@@ -2,6 +2,7 @@
 pubDatetime: 2026-04-02T15:22:00Z
 title: 终端常用命令
 slug: quick-command
+featured: true
 tags:
   - Linux
 description: ""

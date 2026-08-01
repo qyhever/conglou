@@ -5,7 +5,7 @@ slug: fail2ban
 tags:
   - Nginx
   - Fail2Ban
-  - 安全
+  - Safety
 description: "Fail2Ban 是一款基于日志分析的自动封禁工具。它会持续监控 SSH、Nginx 等服务产生的日志，当某个 IP 在指定时间内触发过多异常记录时，自动调用 iptables 或 nftables 将其临时封禁。"
 ---
 
