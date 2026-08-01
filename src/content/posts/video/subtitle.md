@@ -3,14 +3,14 @@ pubDatetime: 2026-06-02T15:22:00Z
 title: 内嵌字幕 硬字幕 外挂字幕的区别
 slug: subtitle
 featured: true
-ogImage: https://r2.qyhever.com/subtitle/7739c2a0-19ae-4ebd-93b9-73b9dc559f00.png
+ogImage: https://r2.qyhever.com/video/subtitle/7739c2a0-19ae-4ebd-93b9-73b9dc559f00.png
 tags:
   - Video
   - FFmpeg
 description: "使用 yt-dlp 下载了内嵌字幕视频后放在 nginx 静态目录下，然后通过浏览器直接访问 下载的 .webm 文件，发现视频没有字幕，但是使用 vlc 播放器播放视频是可以正常显示字幕的，然后就了解了下 web 浏览器播放视频解析字幕和 视频里几种字幕的区别"
 ---
 
-![cover](https://r2.qyhever.com/subtitle/7739c2a0-19ae-4ebd-93b9-73b9dc559f00.png)
+![cover](https://r2.qyhever.com/video/subtitle/7739c2a0-19ae-4ebd-93b9-73b9dc559f00.png)
 
 起因是之前使用 yt-dlp 下载了内嵌字幕视频后放在 nginx 静态目录下，然后通过浏览器直接访问 下载的 .webm 文件，发现视频没有字幕，但是使用 vlc 播放器播放视频是可以正常显示字幕的，然后就了解了下 web 浏览器播放视频解析字幕和 视频里几种字幕的区别。
 

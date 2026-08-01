@@ -18,8 +18,13 @@ import {
 } from "@shikijs/transformers";
 import { transformerFileName } from "./src/utils/transformers/fileName";
 import config from "./astro-paper.config";
+import { loadEnv } from 'vite';
+const { PORT } = loadEnv(process.env.NODE_ENV!, process.cwd(), '')
 
 export default defineConfig({
+  server: {
+    port: Number(PORT) || 4321,
+  },
   site: config.site.url,
   integrations: [
     mdx(),
