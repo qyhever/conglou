@@ -1,4 +1,5 @@
 ---
+import { ListMusic } from "@lucide/astro";
 import musicCover from "@/assets/images/music.jpg";
 
 const playlistUrl = "https://qyhever.com/mp3/playlist.json";
@@ -11,6 +12,17 @@ const playlistUrl = "https://qyhever.com/mp3/playlist.json";
   aria-label="音乐播放器"
 >
   <audio data-music-audio preload="metadata"></audio>
+
+  <button
+    type="button"
+    data-music-collapse-toggle
+    class="music-collapse-toggle"
+    aria-expanded="true"
+    aria-label="收起播放器"
+    title="收起播放器"
+  >
+    <span aria-hidden="true" class="music-collapse-icon"></span>
+  </button>
 
   <div class="music-shell">
     <div class="music-cover" aria-hidden="true">
@@ -65,6 +77,33 @@ const playlistUrl = "https://qyhever.com/mp3/playlist.json";
         >
           <span aria-hidden="true" class="music-icon music-icon-next"></span>
         </button>
+
+        <button
+          type="button"
+          data-music-playlist-toggle
+          class="music-control music-playlist-toggle"
+          aria-label="播放列表"
+          aria-expanded="false"
+          aria-controls="music-playlist-panel"
+          title="播放列表"
+          disabled
+        >
+          <ListMusic aria-hidden="true" size={16} stroke-width={2} />
+        </button>
+      </div>
+    </div>
+
+    <div
+      id="music-playlist-panel"
+      data-music-playlist-panel
+      class="music-playlist-panel"
+      hidden
+    >
+      <div
+        data-music-playlist-list
+        data-music-cover-src={musicCover.src}
+        class="music-playlist-list"
+      >
       </div>
     </div>
 
@@ -87,6 +126,12 @@ const playlistUrl = "https://qyhever.com/mp3/playlist.json";
     font-size: 12px;
   }
 
+  .music-player[data-collapsed="true"] {
+    width: 46px;
+    height: 46px;
+    max-width: none;
+  }
+
   .music-shell {
     position: relative;
     display: grid;
@@ -106,6 +151,101 @@ const playlistUrl = "https://qyhever.com/mp3/playlist.json";
       0 16px 36px color-mix(in srgb, var(--foreground) 15%, transparent),
       0 1px 0 color-mix(in srgb, white 72%, transparent) inset;
     backdrop-filter: blur(14px);
+  }
+
+  .music-collapse-toggle {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 2;
+    display: grid;
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    place-items: center;
+    color: color-mix(in srgb, var(--foreground) 78%, transparent);
+    cursor: pointer;
+    background: color-mix(in srgb, var(--background) 80%, transparent);
+    border: 1px solid color-mix(in srgb, var(--border) 76%, transparent);
+    border-radius: 999px;
+    box-shadow: 0 6px 14px
+      color-mix(in srgb, var(--foreground) 10%, transparent);
+    transition:
+      color 160ms ease,
+      background-color 160ms ease,
+      border-color 160ms ease,
+      transform 160ms ease;
+  }
+
+  .music-collapse-toggle:hover {
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, var(--background));
+    border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+    transform: translateY(-1px);
+  }
+
+  .music-collapse-toggle:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .music-collapse-icon {
+    position: relative;
+    display: block;
+    width: 12px;
+    height: 12px;
+  }
+
+  .music-collapse-icon::before,
+  .music-collapse-icon::after {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    content: "";
+    border-color: currentColor;
+    border-style: solid;
+    transform: rotate(45deg);
+  }
+
+  .music-collapse-icon::before {
+    top: 1px;
+    left: 1px;
+    border-width: 0 0 2px 2px;
+  }
+
+  .music-collapse-icon::after {
+    right: 1px;
+    bottom: 1px;
+    border-width: 2px 2px 0 0;
+  }
+
+  .music-player[data-collapsed="true"] .music-shell {
+    display: none;
+  }
+
+  .music-player[data-collapsed="true"] .music-collapse-toggle {
+    position: relative;
+    inset: auto;
+    width: 46px;
+    height: 46px;
+    color: var(--accent-foreground);
+    background: var(--accent);
+    border-color: color-mix(in srgb, var(--accent) 78%, transparent);
+    box-shadow:
+      0 14px 28px color-mix(in srgb, var(--accent) 24%, transparent),
+      0 1px 0 color-mix(in srgb, white 28%, transparent) inset;
+  }
+
+  .music-player[data-collapsed="true"] .music-collapse-icon::before {
+    top: 0;
+    left: 0;
+    border-width: 2px 2px 0 0;
+  }
+
+  .music-player[data-collapsed="true"] .music-collapse-icon::after {
+    right: 0;
+    bottom: 0;
+    border-width: 0 0 2px 2px;
   }
 
   [data-theme="dark"] .music-shell {
@@ -167,6 +307,7 @@ const playlistUrl = "https://qyhever.com/mp3/playlist.json";
 
   .music-copy {
     min-width: 0;
+    padding-right: 28px;
   }
 
   .music-title,
@@ -257,6 +398,12 @@ const playlistUrl = "https://qyhever.com/mp3/playlist.json";
     background: transparent;
   }
 
+  .music-playlist-toggle[aria-expanded="true"] {
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    border-color: color-mix(in srgb, var(--accent) 22%, transparent);
+  }
+
   .music-toggle {
     width: 30px;
     height: 30px;
@@ -284,6 +431,107 @@ const playlistUrl = "https://qyhever.com/mp3/playlist.json";
   .music-toggle:disabled {
     pointer-events: none;
     opacity: 0.38;
+  }
+
+  .music-control:focus-visible,
+  .music-toggle:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .music-playlist-panel {
+    grid-column: 1 / -1;
+    min-width: 0;
+    max-height: 214px;
+    margin-top: 2px;
+    padding: 6px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: color-mix(in srgb, var(--background) 72%, transparent);
+    border: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
+    border-radius: 4px;
+  }
+
+  .music-playlist-panel[hidden] {
+    display: none;
+  }
+
+  .music-playlist-list {
+    display: grid;
+    gap: 4px;
+  }
+
+  .music-playlist-item {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr);
+    gap: 8px;
+    align-items: center;
+    width: 100%;
+    min-height: 42px;
+    padding: 4px 6px 4px 4px;
+    color: color-mix(in srgb, var(--foreground) 82%, transparent);
+    text-align: left;
+    cursor: pointer;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    transition:
+      color 160ms ease,
+      background-color 160ms ease,
+      border-color 160ms ease;
+  }
+
+  .music-playlist-item:hover {
+    color: var(--foreground);
+    background: color-mix(in srgb, var(--accent) 9%, transparent);
+    border-color: color-mix(in srgb, var(--accent) 16%, transparent);
+  }
+
+  .music-playlist-item:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .music-playlist-item[aria-current="true"] {
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 13%, transparent);
+    border-color: color-mix(in srgb, var(--accent) 26%, transparent);
+  }
+
+  .music-playlist-cover {
+    width: 34px;
+    height: 34px;
+    overflow: hidden;
+    background: var(--muted);
+    border: 1px solid color-mix(in srgb, var(--border) 66%, transparent);
+    border-radius: 3px;
+  }
+
+  .music-playlist-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.75) contrast(1.05);
+    transform: scale(2.35);
+    transform-origin: 50% 50%;
+  }
+
+  .music-playlist-title {
+    min-width: 0;
+    overflow: hidden;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.3;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .music-playlist-empty {
+    margin: 0;
+    padding: 8px 4px;
+    color: var(--muted-foreground);
+    font-size: 12px;
+    line-height: 1.4;
   }
 
   .music-progress-track {
@@ -416,6 +664,12 @@ const playlistUrl = "https://qyhever.com/mp3/playlist.json";
       width: auto;
       max-width: none;
     }
+
+    .music-player[data-collapsed="true"] {
+      right: auto;
+      left: 1rem;
+      width: 46px;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -429,6 +683,14 @@ const playlistUrl = "https://qyhever.com/mp3/playlist.json";
     }
 
     .music-progress {
+      transition: none;
+    }
+
+    .music-collapse-toggle {
+      transition: none;
+    }
+
+    .music-playlist-item {
       transition: none;
     }
   }
@@ -469,6 +731,18 @@ const playlistUrl = "https://qyhever.com/mp3/playlist.json";
     const toggle = root.querySelector<HTMLButtonElement>("[data-music-toggle]");
     const prev = root.querySelector<HTMLButtonElement>("[data-music-prev]");
     const next = root.querySelector<HTMLButtonElement>("[data-music-next]");
+    const playlistToggle = root.querySelector<HTMLButtonElement>(
+      "[data-music-playlist-toggle]"
+    );
+    const playlistPanel = root.querySelector<HTMLElement>(
+      "[data-music-playlist-panel]"
+    );
+    const playlistList = root.querySelector<HTMLElement>(
+      "[data-music-playlist-list]"
+    );
+    const collapseToggle = root.querySelector<HTMLButtonElement>(
+      "[data-music-collapse-toggle]"
+    );
     const playIcon = root.querySelector<HTMLElement>("[data-music-play-icon]");
     const pauseIcon = root.querySelector<HTMLElement>(
       "[data-music-pause-icon]"
@@ -479,8 +753,42 @@ const playlistUrl = "https://qyhever.com/mp3/playlist.json";
       index: 0,
       isPlaying: false,
       isLoading: true,
+      isPlaylistOpen: false,
       message: "",
     };
+
+    const collapseStorageKey = "music-player-collapsed";
+
+    function setCollapsed(collapsed: boolean) {
+      root.dataset.collapsed = collapsed ? "true" : "false";
+      collapseToggle?.setAttribute("aria-expanded", String(!collapsed));
+      collapseToggle?.setAttribute(
+        "aria-label",
+        collapsed ? "展开播放器" : "收起播放器"
+      );
+      collapseToggle?.setAttribute(
+        "title",
+        collapsed ? "展开播放器" : "收起播放器"
+      );
+      if (collapsed) setPlaylistOpen(false);
+      refreshTitleScroll();
+    }
+
+    function readStoredCollapsed() {
+      try {
+        return localStorage.getItem(collapseStorageKey) === "true";
+      } catch {
+        return false;
+      }
+    }
+
+    function storeCollapsed(collapsed: boolean) {
+      try {
+        localStorage.setItem(collapseStorageKey, String(collapsed));
+      } catch {
+        // Ignore unavailable storage; the button should still work in-session.
+      }
+    }
 
     function setText(element: HTMLElement | null, value: string) {
       if (element) element.textContent = value;
@@ -522,6 +830,7 @@ const playlistUrl = "https://qyhever.com/mp3/playlist.json";
       if (toggle) toggle.disabled = disabled;
       if (prev) prev.disabled = disabled;
       if (next) next.disabled = disabled;
+      if (playlistToggle) playlistToggle.disabled = disabled;
     }
 
     function getCurrentTrack() {
@@ -571,6 +880,80 @@ const playlistUrl = "https://qyhever.com/mp3/playlist.json";
       toggle?.setAttribute("aria-label", state.isPlaying ? "暂停" : "播放");
       playIcon?.classList.toggle("hidden", state.isPlaying);
       pauseIcon?.classList.toggle("hidden", !state.isPlaying);
+      updatePlaylistCurrent();
+    }
+
+    function setPlaylistOpen(open: boolean) {
+      const canOpen = open && state.tracks.length > 0 && !state.isLoading;
+
+      state.isPlaylistOpen = canOpen;
+      playlistToggle?.setAttribute("aria-expanded", String(canOpen));
+
+      if (playlistPanel) {
+        playlistPanel.hidden = !canOpen;
+      }
+    }
+
+    function updatePlaylistCurrent() {
+      if (!playlistList) return;
+
+      playlistList
+        .querySelectorAll<HTMLButtonElement>("[data-music-playlist-item]")
+        .forEach(item => {
+          const isCurrent = Number(item.dataset.trackIndex) === state.index;
+          if (isCurrent) {
+            item.setAttribute("aria-current", "true");
+          } else {
+            item.removeAttribute("aria-current");
+          }
+        });
+    }
+
+    function renderPlaylist() {
+      if (!playlistList) return;
+
+      playlistList.replaceChildren();
+
+      if (!state.tracks.length) {
+        const empty = document.createElement("p");
+        empty.className = "music-playlist-empty";
+        empty.textContent = state.isLoading ? "歌单加载中" : "暂无可播放歌曲";
+        playlistList.append(empty);
+        setPlaylistOpen(false);
+        return;
+      }
+
+      const coverSrc = playlistList.dataset.musicCoverSrc ?? "";
+      const fragment = document.createDocumentFragment();
+
+      state.tracks.forEach((track, index) => {
+        const item = document.createElement("button");
+        item.type = "button";
+        item.className = "music-playlist-item";
+        item.dataset.musicPlaylistItem = "";
+        item.dataset.trackIndex = String(index);
+
+        const cover = document.createElement("span");
+        cover.className = "music-playlist-cover";
+        cover.setAttribute("aria-hidden", "true");
+
+        const image = document.createElement("img");
+        image.src = coverSrc;
+        image.alt = "";
+        image.loading = "lazy";
+        image.decoding = "async";
+
+        const name = document.createElement("span");
+        name.className = "music-playlist-title";
+        name.textContent = track.title;
+
+        cover.append(image);
+        item.append(cover, name);
+        fragment.append(item);
+      });
+
+      playlistList.append(fragment);
+      updatePlaylistCurrent();
     }
 
     function renderProgress() {
@@ -602,6 +985,7 @@ const playlistUrl = "https://qyhever.com/mp3/playlist.json";
       audio.load();
       renderProgress();
       render();
+      updatePlaylistCurrent();
     }
 
     async function playCurrent() {
@@ -626,15 +1010,14 @@ const playlistUrl = "https://qyhever.com/mp3/playlist.json";
       render();
     }
 
-    function shiftTrack(delta: number) {
+    function shiftTrack(delta: number, shouldPlay = state.isPlaying) {
       if (!state.tracks.length) return;
 
       const nextIndex =
         (state.index + delta + state.tracks.length) % state.tracks.length;
-      const shouldResume = state.isPlaying;
       loadTrack(nextIndex);
 
-      if (shouldResume) {
+      if (shouldPlay) {
         void playCurrent();
       }
     }
@@ -658,6 +1041,7 @@ const playlistUrl = "https://qyhever.com/mp3/playlist.json";
       state.isLoading = true;
       state.message = "";
       render();
+      renderPlaylist();
 
       try {
         const response = await requestPlaylist();
@@ -682,10 +1066,13 @@ const playlistUrl = "https://qyhever.com/mp3/playlist.json";
         state.isLoading = false;
         state.message = "";
         loadTrack(0);
+        renderPlaylist();
       } catch {
         state.isLoading = false;
         state.isPlaying = false;
         state.message = "请稍后刷新重试";
+        state.tracks = [];
+        renderPlaylist();
         setControlsDisabled(true);
         setTitle("歌单加载失败");
         setText(status, state.message);
@@ -702,6 +1089,29 @@ const playlistUrl = "https://qyhever.com/mp3/playlist.json";
       }
     });
 
+    collapseToggle?.addEventListener("click", () => {
+      const collapsed = root.dataset.collapsed !== "true";
+      setCollapsed(collapsed);
+      storeCollapsed(collapsed);
+    });
+
+    playlistToggle?.addEventListener("click", () => {
+      setPlaylistOpen(!state.isPlaylistOpen);
+    });
+
+    playlistList?.addEventListener("click", event => {
+      const item = (event.target as Element | null)?.closest<HTMLButtonElement>(
+        "[data-music-playlist-item]"
+      );
+      if (!item) return;
+
+      const index = Number(item.dataset.trackIndex);
+      if (!Number.isInteger(index)) return;
+
+      loadTrack(index);
+      void playCurrent();
+    });
+
     prev?.addEventListener("click", () => shiftTrack(-1));
     next?.addEventListener("click", () => shiftTrack(1));
 
@@ -716,7 +1126,7 @@ const playlistUrl = "https://qyhever.com/mp3/playlist.json";
       render();
     });
 
-    audio?.addEventListener("ended", () => shiftTrack(1));
+    audio?.addEventListener("ended", () => shiftTrack(1, true));
     audio?.addEventListener("loadedmetadata", renderProgress);
     audio?.addEventListener("timeupdate", renderProgress);
 
@@ -726,6 +1136,7 @@ const playlistUrl = "https://qyhever.com/mp3/playlist.json";
       render();
     });
 
+    setCollapsed(readStoredCollapsed());
     void fetchPlaylist();
   }
 </script>
