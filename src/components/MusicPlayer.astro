@@ -711,9 +711,30 @@ const playlistUrl = "https://qyhever.com/mp3/playlist.json";
     src: string;
   };
 
-  const player = document.querySelector<HTMLElement>("[data-music-player]");
+  type MusicPlayerController = {
+    restore: () => void;
+  };
 
-  if (player && !player.dataset.initialized) {
+  type MusicPlayerElement = HTMLElement & {
+    __musicPlayerController?: MusicPlayerController;
+  };
+
+  type MusicPlayerWindow = Window & {
+    __musicPlayerPageLoadBound?: boolean;
+  };
+
+  function initMusicPlayer() {
+    const player = document.querySelector<MusicPlayerElement>(
+      "[data-music-player]"
+    );
+
+    if (!player) return;
+
+    if (player.__musicPlayerController) {
+      player.__musicPlayerController.restore();
+      return;
+    }
+
     const root = player;
 
     root.dataset.initialized = "true";
@@ -965,6 +986,13 @@ const playlistUrl = "https://qyhever.com/mp3/playlist.json";
       renderTime();
     }
 
+    function restore() {
+      if (audio) state.isPlaying = !audio.paused;
+      setCollapsed(readStoredCollapsed());
+      renderProgress();
+      render();
+    }
+
     function toTrack(item: RawTrack, index: number): Track | null {
       if (!item || !item.baseUrl || !item.url || !item.ext) return null;
 
@@ -1136,7 +1164,15 @@ const playlistUrl = "https://qyhever.com/mp3/playlist.json";
       render();
     });
 
-    setCollapsed(readStoredCollapsed());
+    root.__musicPlayerController = { restore };
+    restore();
     void fetchPlaylist();
+  }
+
+  initMusicPlayer();
+  const musicPlayerWindow = window as MusicPlayerWindow;
+  if (!musicPlayerWindow.__musicPlayerPageLoadBound) {
+    musicPlayerWindow.__musicPlayerPageLoadBound = true;
+    document.addEventListener("astro:page-load", initMusicPlayer);
   }
 </script>
