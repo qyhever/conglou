@@ -2,13 +2,14 @@
 
 set -euo pipefail
 
+DEPLOY_SSH_PORT=""
+
 # GitHub Actions 通过环境变量指定服务器；本地继续兼容 ~/.ssh/config 中的 qyhever。
 if [ -n "${SERVER_HOST:-}" ] && [ -n "${SERVER_USER:-}" ]; then
     DEPLOY_TARGET="${SERVER_USER}@${SERVER_HOST}"
     DEPLOY_SSH_PORT="${SERVER_PORT:-22}"
 elif [ -z "${SERVER_HOST:-}" ] && [ -z "${SERVER_USER:-}" ]; then
     DEPLOY_TARGET="${DEPLOY_TARGET:-qyhever}"
-    DEPLOY_SSH_PORT="${SERVER_PORT:-}"
 else
     echo "❌ SERVER_HOST 和 SERVER_USER 必须同时设置"
     exit 1
