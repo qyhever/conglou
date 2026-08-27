@@ -2,8 +2,9 @@
 pubDatetime: 2026-05-19T15:22:00Z
 title: Obsidian 使用 Git 实现 Windows、macOS、iOS 与 Android 多端同步
 slug: sync-by-git
+featured: true
 tags:
-  - Obisidian
+  - Obsidian
   - Tools
   - Git
 description: ""
