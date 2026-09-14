@@ -123,13 +123,23 @@ ssh -o ProxyCommand="nc -x 127.0.0.1:7890 %h %p" user@remote_ip
 ```bash
 # 查询服务器指定端口是否开启
 nc -vz remote_ip 8443
+
+# 发送请求
+curl https://ipinfo.io
+# or
+wget -O- https://ipinfo.io
 ```
 
 查询指定端口占用
 ```bash
 # 查看监听 + 连接状态，显示进程
-sudo ss -tulnp | grep :5300
+sudo ss -tulnp | grep 80
+sudo ss -tulnp | grep nginx
 
-# 查看占用5300端口的进程
-sudo lsof -i :5300
+# 查看占用80端口的进程
+sudo lsof -i :80
+
+# netstat
+netstat -lntp 2>/dev/null | grep nginx
+netstat -lntp 2>/dev/null | grep 80
 ```
