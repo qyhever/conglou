@@ -240,7 +240,7 @@ wget https://github.com/fatedier/frp/releases/download/v0.71.0/frp_0.71.0_linux_
 # 检查 SHA256 与官方 Release 完全一致
 sha256sum frp_0.71.0_linux_amd64.tar.gz
 tar -xzf frp_0.71.0_linux_amd64.tar.gz
-cd tar -xzf frp_0.71.0_linux_amd64
+cd frp_0.71.0_linux_amd64
 ```
 
 然后将可执行文件放到 bin 下：

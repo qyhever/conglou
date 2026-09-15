@@ -78,8 +78,8 @@ IPv6 - Domains：输入 example.com 的多级域名，例如 op.example.com
 
 在内网无法访问 http://op.example.com:5300 是正常的，这个是公网的规则。内网属于 lan 区域，没有 5300 的端口转发规则，内网可以访问 http://op.example.com:80。如果内网也需要可以访问 5300 端口，需要再添加 端口转发规则。
 
-Cloudflare API令牌创建：
-我的个人资料 - API令牌 - 创建令牌 - 编辑区域DNS使用模板
+Cloudflare API令牌创建：  
+我的个人资料 - API令牌 - 创建令牌 - 编辑区域DNS使用模板  
 区域资源选择 example.com，其它都不变，点击继续 - 创建令牌，复制令牌并妥善保管，后面再次进入无法查看。
 
 ## TLS 证书
