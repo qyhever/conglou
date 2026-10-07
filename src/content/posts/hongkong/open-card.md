@@ -1,7 +1,7 @@
 ---
-pubDatetime: 2026-10-07T19:22:00Z
+pubDatetime: 2026-10-07T19:22:00+08:00
 title: 2026-10-07赴港开卡记录
-slug: hongkong
+slug: open-card
 tags:
   - Hongkong
 description: ""
