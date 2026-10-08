@@ -461,7 +461,8 @@ const playlistUrl = "https://qyhever.com/mp3/playlist.json";
     gap: 4px;
   }
 
-  .music-playlist-item {
+  /* Playlist children are created at runtime and do not receive Astro scope attributes. */
+  .music-playlist-list :global(.music-playlist-item) {
     display: grid;
     grid-template-columns: 34px minmax(0, 1fr);
     gap: 8px;
@@ -481,24 +482,24 @@ const playlistUrl = "https://qyhever.com/mp3/playlist.json";
       border-color 160ms ease;
   }
 
-  .music-playlist-item:hover {
+  .music-playlist-list :global(.music-playlist-item:hover) {
     color: var(--foreground);
     background: color-mix(in srgb, var(--accent) 9%, transparent);
     border-color: color-mix(in srgb, var(--accent) 16%, transparent);
   }
 
-  .music-playlist-item:focus-visible {
+  .music-playlist-list :global(.music-playlist-item:focus-visible) {
     outline: 2px solid var(--accent);
     outline-offset: 2px;
   }
 
-  .music-playlist-item[aria-current="true"] {
+  .music-playlist-list :global(.music-playlist-item[aria-current="true"]) {
     color: var(--accent);
     background: color-mix(in srgb, var(--accent) 13%, transparent);
     border-color: color-mix(in srgb, var(--accent) 26%, transparent);
   }
 
-  .music-playlist-cover {
+  .music-playlist-list :global(.music-playlist-cover) {
     width: 34px;
     height: 34px;
     overflow: hidden;
@@ -507,7 +508,7 @@ const playlistUrl = "https://qyhever.com/mp3/playlist.json";
     border-radius: 3px;
   }
 
-  .music-playlist-cover img {
+  .music-playlist-list :global(.music-playlist-cover img) {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -516,7 +517,7 @@ const playlistUrl = "https://qyhever.com/mp3/playlist.json";
     transform-origin: 50% 50%;
   }
 
-  .music-playlist-title {
+  .music-playlist-list :global(.music-playlist-title) {
     min-width: 0;
     overflow: hidden;
     font-size: 12px;
@@ -526,7 +527,7 @@ const playlistUrl = "https://qyhever.com/mp3/playlist.json";
     white-space: nowrap;
   }
 
-  .music-playlist-empty {
+  .music-playlist-list :global(.music-playlist-empty) {
     margin: 0;
     padding: 8px 4px;
     color: var(--muted-foreground);
@@ -690,7 +691,7 @@ const playlistUrl = "https://qyhever.com/mp3/playlist.json";
       transition: none;
     }
 
-    .music-playlist-item {
+    .music-playlist-list :global(.music-playlist-item) {
       transition: none;
     }
   }
