@@ -121,8 +121,10 @@ ssh -o ProxyCommand="nc -x 127.0.0.1:7890 %h %p" user@remote_ip
 
 ## 网络相关
 ```bash
-# 查询服务器指定端口是否开启
-nc -vz remote_ip 8443
+# 查询服务器指定端口是否开启 ipv4
+nc -vz YOUR_VPS_IPV4 8443
+# 查询服务器指定端口是否开启 ipv6
+nc -6 -vzu YOUR_VPS_IPV6 443
 
 # 发送请求
 curl https://ipinfo.io
